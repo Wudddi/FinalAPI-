@@ -58,6 +58,24 @@ app.put('/movies/:id', (req, res) => {
     }
 });
 
+// Delete a movie by ID (DELETE)
+app.delete('/movies/:id', (req, res) => {
+    const movies = readData(); // Read all movies
+    const movieIndex = movies.findIndex(m => m.id == req.params.id); // Find the index of the movie with the matching ID
+    
+    if (movieIndex !== -1) {
+        const deletedMovie = movies.splice(movieIndex, 1); // Remove the movie from the array
+        writeData(movies); // Save updated data to the JSON file
+        res.status(200).json({
+            message: 'Movie deleted successfully', // Respond with a success message
+            deletedMovie: deletedMovie[0] // Include the deleted movie in the response
+        });
+    } else {
+        res.status(404).json({
+            message: 'Movie not found' // Respond with 404 if not found
+        });
+    }
+});
 
 // Start the server and listen on the specified port
 app.listen(PORT, () => {
