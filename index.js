@@ -45,6 +45,19 @@ app.get('/movies/:id', (req, res) => {
     }
 });
 
+// Update an existing movie by ID (PUT)
+app.put('/movies/:id', (req, res) => {
+    const movies = readData(); // Read all movies
+    const index = movies.findIndex(m => m.id == req.params.id); // Find the index of the movie with the matching ID
+    if (index !== -1) {
+        movies[index] = { ...movies[index], ...req.body }; // Update the movie with new data
+        writeData(movies); // Save updated data to the JSON file
+        res.json(movies[index]); // Respond with the updated movie
+    } else {
+        res.status(404).json({ message: 'Movie not found' }); // Respond with 404 if not found
+    }
+});
+
 
 // Start the server and listen on the specified port
 app.listen(PORT, () => {
